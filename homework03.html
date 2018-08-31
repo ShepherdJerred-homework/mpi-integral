@@ -1,0 +1,118 @@
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>Comp 425 Homework</title>
+    <link rel="stylesheet" href="../standard.css" type="text/css"/>
+    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <base target="_top"/>
+    <style>
+      ol > li { margin-bottom: 2em; }
+      ol ol > li, ol ul > li { margin: 0.5em 0; }
+      ol { list-style-type: decimal; }
+      ol ol { list-style-type: lower-alpha; }
+      .svg { height: 12em; display: block; }
+      .figure {
+          padding: 1em;
+          border: 1px solid black;
+      }
+      .figure .source {
+          font-size: 9pt;
+          padding-top: 2pt;
+      }
+      .right { float: right; margin-left: 1em; }
+      .left { float: left; margin-right: 1em; }
+      h3 { clear: both; padding-top: 1em; }
+    </style>
+  </head>
+  <body>
+    <div class="figure right">
+      <img class="svg" src="img/integral.svg"/>
+      <caption>
+        <em>Figure 1</em>:
+        The integral of <var>f</var>(<var>x</var>) from <var>a</var> to <var>b</var>
+      </caption>
+      <div class="source"><em>Source</em>:
+        <a href="https://en.wikipedia.org/wiki/Integral">https://en.wikipedia.org/wiki/Integral</a></div>
+    </div>
+    <p>
+      In mathematics, we can use
+      the <a href="https://en.wikipedia.org/wiki/Integral">integral</a> of a
+      function to calculate the area under a curve.  For example, in the
+      Figure 1 the integral of \(f(x)\) from point \(a\) to point \(b\) would
+      give us the positive area (in blue) minus the negative area (in yellow).
+    </p>
+    <p>
+      One simple method of approximating the integral is called
+      the <dfn>trapezoidal rule</dfn>.  This rule says we can break the area
+      down into a series of trapezoids, each with the same width.  For
+      example, if calculating the area from \(a\) to \(b\) using
+      \(100\) trapezoids, the width of each trapezoid would be \(w = (b
+      - a) / 100\).
+    </p>
+    <p>
+      If we number the trapezoids from left to right (i.e., 0, 1, 2, ...) then
+      trapezoid \(i\) begins at \(x_i = a + iw\) and ends at \(x_{i+1} = a +
+      (i+1)w\).  The bottom points of the trapezoid are always at \(0\).  The
+      top points are \(y_i = f(x_i)\) and \(y_{i+1} = f(x_{i+1})\).  The area
+      of the trapezoid, then, is \(w\frac{f(y_i) + f(y_{i+1})}{2}\).
+    </p>
+    <div class="figure left">
+      <img class="svg" src="img/trapezoid.svg"/>
+      <caption>
+        <em>Figure 2</em>: Dividing the integral into trapezoidal regions.
+        <div class="source"><em>Source</em>:
+          <a href="https://en.wikipedia.org/wiki/Trapezoidal_rule">https://en.wikipedia.org/wiki/Trapezoidal_rule</a>
+        </div>
+      </caption>
+    </div>
+    <p>
+      We will assume our function is a polynomial, and represent it as a
+      series of numbers representing the coefficients.  In general, given the
+      series \(n_1, n_2, \ldots, n_k\) represents the polynomial \(n_1 x^{k-1} +
+      n_2 x^{k-2} + \ldots + n_{k - 2} x^2 + n_{k-1} x + n_k\).  So, for example,
+      the series \(3, 9, 0, -6, 2\) represents the polynomial \(3x^4 + 9x^3 -
+      6x + 2\).
+    </p>
+    <p>
+      You may use <a href="integral.cpp">my program which calculates the
+      integral of a function</a> as a starting point.
+    </p>
+    <h3>Requirements</h3>
+    <ol>
+      <li>
+        The main process (rank 0) should let the user input (in order):
+        <ul>
+          <li>The left boundary \(x_1\) of the interval</li>
+          <li>The right boundary \(x_2\) of the interval</li>
+          <li>The number \(n\) of trapezoids each process should use when calculating the area</li>
+          <li>The coefficients defining the function \(f\)</li>
+        </ul>
+        Continue to read coefficients until you reach end of file.  If you are
+        running the program from the command prompt, you can
+        enter <kbd>Ctrl-Z</kbd> (on Windows) or <kbd>Ctrl-D</kbd> (on *nix) to
+        signal the end of file.
+      </li>
+      <li>
+        The main process should broadcast the user input to all processes.
+        Note that you must use a broadcast; you cannot use, e.g., command line
+        arguments.  (We&rsquo;re trying to practice doing a broadcast.)
+      </li>
+      <li>
+        Suppose you have \(p\) processes.  Then each process should calculate
+        the area for \(\frac{1}{p}\) of the interval between \(x_1\) and
+        \(x_1\) by further breaking it into \(n\) trapezoids.
+        <p>
+          Thus, if you are process \(i\), you should calculate the interval
+          from \(x_1 + \frac{i}{p}(x_2 - x_1)\) to \(x_1 + \frac{i + 1}{p}(x_2
+          - x_1)\).
+        </p>
+      </li>
+      <li>
+        Sum the values obtained by all processes using an MPI reduce operation
+      </li>
+      <li>
+        The main process should output the result.
+      </li>
+    </ol>
+  </body>
+</html>
